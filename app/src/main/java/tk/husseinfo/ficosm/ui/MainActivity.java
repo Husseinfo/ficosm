@@ -1,4 +1,4 @@
-package tk.husseinfo.ficosm.UI;
+package tk.husseinfo.ficosm.ui;
 
 import android.Manifest;
 import android.content.DialogInterface;
