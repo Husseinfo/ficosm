@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">ficosm</string>
+    <string name="enable">Enable</string>
+    <string name="ok">Okay</string>
+    <string name="request_receive_sms_permission_explanation">SMS and Contacts permissions are required</string>
 </resources>
