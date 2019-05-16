@@ -2,6 +2,8 @@ package tk.husseinfo.ficosm.br
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.arch.persistence.room.Database
+import android.arch.persistence.room.Room
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,6 +12,8 @@ import android.provider.Telephony
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import tk.husseinfo.ficosm.R
+import tk.husseinfo.ficosm.db.AppDatabase
+import tk.husseinfo.ficosm.db.DATABASE_NAME
 import tk.husseinfo.ficosm.utils.Parser
 
 
@@ -18,16 +22,25 @@ private const val NOTIFICATIONS_CHANNEL_ID: String = "MC_SMS"
 
 class SMSBroadcastReceiver : BroadcastReceiver() {
 
+    val db = null
+
+    fun getDatabase(context: Context): AppDatabase{
+        return db?: Room.databaseBuilder(
+                context,
+                AppDatabase::class.java, DATABASE_NAME
+        ).build()
+    }
 
     override fun onReceive(context: Context, intent: Intent?) {
         for (smsMessage in Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
             if (smsMessage.originatingAddress == MC_SMS_SENDER_TOUCH) {
                 val mc = Parser.getMissedCall(context, smsMessage.displayMessageBody)
                 if (mc != null) {
+                    getDatabase(context).missedCallDao().insertOne(mc)
                     val builder = NotificationCompat.Builder(context, NOTIFICATIONS_CHANNEL_ID)
                             .setSmallIcon(R.drawable.icons8_missed_call_24)
                             .setContentTitle(context.resources.getString(R.string.missed_call_notification_title))
-                            .setContentText("[${mc.count}] ${mc.contact} ${mc.date}")
+                            .setContentText("[${mc.count}] ${mc.contactName} ${mc.date}")
                             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
                     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
