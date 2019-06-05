@@ -4,4 +4,4 @@ import android.provider.ContactsContract
 
 import java.util.Date
 
-class MissedCall(var contact: String?, var count: Int, var date: String?)
+class MissedCall(var number: String?, var contact: String?, var count: Int, var date: String?)

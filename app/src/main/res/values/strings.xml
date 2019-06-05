@@ -4,4 +4,6 @@
     <string name="ok">Okay</string>
     <string name="missed_call_notification_title">SMS Missed call</string>
     <string name="request_receive_sms_permission_explanation">SMS and Contacts permissions are required</string>
+    <string name="call_number">Call</string>
+    <string name="search_number">Search</string>
 </resources>
