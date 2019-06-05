@@ -2,7 +2,6 @@ package tk.husseinfo.ficosm.br
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -22,10 +21,10 @@ private const val NOTIFICATIONS_CHANNEL_ID: String = "MC_SMS"
 
 class SMSBroadcastReceiver : BroadcastReceiver() {
 
-    val db = null
+    private val db = null
 
-    fun getDatabase(context: Context): AppDatabase{
-        return db?: Room.databaseBuilder(
+    private fun getDatabase(context: Context): AppDatabase {
+        return db ?: Room.databaseBuilder(
                 context,
                 AppDatabase::class.java, DATABASE_NAME
         ).build()

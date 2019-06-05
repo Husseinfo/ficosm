@@ -9,6 +9,9 @@ interface MissedCallDAO {
     @Query("SELECT * FROM MissedCall")
     fun getAll(): List<MissedCall>
 
+    @Query("DELETE FROM MissedCall")
+    fun deleteAll()
+
     @Insert
     fun insertOne(mc: MissedCall)
 }

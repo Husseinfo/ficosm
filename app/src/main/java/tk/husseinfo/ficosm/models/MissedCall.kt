@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import java.util.Date
 
 
-@Entity
+@Entity(tableName = "missed_call")
 data class MissedCall(
         @PrimaryKey(autoGenerate = true) val uid: Int?,
         @ColumnInfo(name = "contact_name") val contactName: String?,
