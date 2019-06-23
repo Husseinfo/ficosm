@@ -35,8 +35,8 @@ class SMSBroadcastReceiver : BroadcastReceiver() {
                                 PendingIntent.getActivity(context, 2, Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", mc?.number, null)), PendingIntent.FLAG_UPDATE_CURRENT))
 
 
-                if (mc?.contact != null) {
-                    val searchIntent = Intent.parseUri("http://truecaller.com/search/lb/${mc.number?.replace("+961", "")}", Intent.URI_INTENT_SCHEME)
+                if (mc?.contact == null) {
+                    val searchIntent = Intent.parseUri("http://truecaller.com/search/lb/${mc?.number?.replace("+961", "")}", Intent.URI_INTENT_SCHEME)
                     builder.addAction(R.drawable.icons8_search_filled_24, context.resources.getString(R.string.search_number),
                             PendingIntent.getActivity(context, 1, searchIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                 }
