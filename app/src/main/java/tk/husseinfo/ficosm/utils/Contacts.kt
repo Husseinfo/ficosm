@@ -9,7 +9,7 @@ import android.provider.ContactsContract
 class Contacts {
 
     companion object {
-        fun getContactFromPhoneBook(context: Context, number: String): String? {
+        private fun getContactFromPhoneBook(context: Context, number: String): String? {
             val uri = withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number))
             val cursor = context.contentResolver.query(uri,
                     arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME),

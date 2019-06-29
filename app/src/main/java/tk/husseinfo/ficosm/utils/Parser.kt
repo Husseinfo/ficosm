@@ -2,6 +2,7 @@ package tk.husseinfo.ficosm.utils
 
 import android.content.Context
 import tk.husseinfo.ficosm.models.MissedCall
+import java.text.SimpleDateFormat
 
 class Parser {
 
@@ -11,11 +12,12 @@ class Parser {
             try {
                 val number: String = Regex("\\+\\d*").find(sms)?.value ?: return null
                 val count: String? = Regex("\\[\\d{1,3}]").find(sms)?.value
-                val date: String? = Regex("\\d{2}/\\d{2}/\\d{2,4}").find(sms)?.value + " at " +
-                        Regex("\\d{2}:\\d{2}").find(sms)?.value
+                val day: String? = Regex("\\d{2}/\\d{2}/\\d{2,4}").find(sms)?.value
+                val time: String? = Regex("\\d{2}:\\d{2}").find(sms)?.value
+                val date: Long? = SimpleDateFormat("dd/MM/yy hh:mm").parse("$day $time").time
                 val contact = Contacts.getContact(context = context, number = number)
-                return MissedCall(number = number, contact = contact, count = Integer.parseInt(count?.substring(1, 2)
-                        ?: "0"), date = date)
+                return MissedCall(uid = null, contactName = contact, contactNumber = number, count = Integer.parseInt(count?.substring(1, 2)
+                        ?: "0"), date = date, inContacts = contact != null)
             } catch (e: Exception) {
                 return null
             }
