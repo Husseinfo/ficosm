@@ -9,16 +9,15 @@ import tk.husseinfo.ficosm.R
 
 import tk.husseinfo.ficosm.models.MissedCall
 
-class MCListAdapter(private val dataset: List<MissedCall>) :
+class MCListAdapter(private val calls: List<MissedCall>) :
         RecyclerView.Adapter<MCListAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val contactName: TextView? = null
         private val mcDate: TextView? = null
 
-        //        fun bind(item: MissedCall, listener: (MissedCall) -> Unit) = with(itemView) {
         fun bind(item: MissedCall) = with(itemView) {
-            contactName?.text = item.contactName
+            contactName?.text = item.contactName ?: item.contactNumber
             mcDate?.text = item.date.toString()
 //            setOnClickListener { listener(item) }
         }
@@ -31,8 +30,8 @@ class MCListAdapter(private val dataset: List<MissedCall>) :
         return ViewHolder(mcView)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataset.get(position))
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(calls[position])
 
-    override fun getItemCount() = dataset.size
+    override fun getItemCount() = calls.size
 
 }

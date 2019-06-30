@@ -15,7 +15,7 @@ import android.support.v4.app.NotificationManagerCompat
 import tk.husseinfo.ficosm.R
 import tk.husseinfo.ficosm.db.AppDatabase
 import tk.husseinfo.ficosm.db.DATABASE_NAME
-import tk.husseinfo.ficosm.utils.Parser
+import tk.husseinfo.ficosm.utils.getMissedCall
 
 
 private const val MC_SMS_SENDER_TOUCH: String = "164"
@@ -35,13 +35,12 @@ class SMSBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         for (smsMessage in Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
             if (smsMessage.originatingAddress == MC_SMS_SENDER_TOUCH) {
-                val mc = Parser.getMissedCall(context, smsMessage.displayMessageBody) ?: return
+                val mc = getMissedCall(context, smsMessage.displayMessageBody) ?: return
                 getDatabase(context).missedCallDao().insertOne(mc)
                 val builder = NotificationCompat.Builder(context, NOTIFICATIONS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.icons8_missed_call_24)
-                        .setContentTitle(context.resources.getString(R.string.missed_call_notification_title))
-                        .setContentText("[${mc.count}] ${mc.contactName
-                                ?: mc.contactNumber} ${mc.day} at ${mc.time}}")
+                        .setContentTitle("${mc.contactName ?: mc.contactNumber}")
+                        .setContentText("${mc.time} - ${mc.day}")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .addAction(R.drawable.icons8_phone_filled_24, context.resources.getString(R.string.call_number),
                                 PendingIntent.getActivity(context, 2, Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", mc.contactNumber, null)), PendingIntent.FLAG_UPDATE_CURRENT))
@@ -61,7 +60,6 @@ class SMSBroadcastReceiver : BroadcastReceiver() {
                 } catch (e: Exception) {
 
                 }
-
 
                 with(NotificationManagerCompat.from(context)) {
                     notify(builder.hashCode(), builder.build())
