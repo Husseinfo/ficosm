@@ -39,8 +39,7 @@ class SMSBroadcastReceiver : BroadcastReceiver() {
                 getDatabase(context).missedCallDao().insertOne(mc)
                 val builder = NotificationCompat.Builder(context, NOTIFICATIONS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.icons8_missed_call_24)
-                        .setContentTitle("${mc.contactName ?: mc.contactNumber}")
-                        .setContentText("${mc.time} - ${mc.day}")
+                        .setContentTitle("${mc.contactName ?: mc.contactNumber} at ${mc.time}")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .addAction(R.drawable.icons8_phone_filled_24, context.resources.getString(R.string.call_number),
                                 PendingIntent.getActivity(context, 2, Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", mc.contactNumber, null)), PendingIntent.FLAG_UPDATE_CURRENT))

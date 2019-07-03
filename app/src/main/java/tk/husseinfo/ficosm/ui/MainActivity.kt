@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 import butterknife.BindView
@@ -34,9 +35,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         checkPermissions(this)
         viewAdapter = MCListAdapter(getDatabase(applicationContext).missedCallDao().getAll())
+        viewManager = LinearLayoutManager(this)
         recyclerView = findViewById<RecyclerView>(R.id.history_view).apply {
             setHasFixedSize(true)
             adapter = viewAdapter
+            layoutManager = viewManager
         }
     }
 
@@ -53,5 +56,10 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val REQUEST_PERMISSIONS = 1
+    }
+
+    fun syncDb() {
+        getDatabase(this).missedCallDao().deleteAll()
+
     }
 }

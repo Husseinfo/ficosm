@@ -13,18 +13,18 @@ data class MissedCall(
         @ColumnInfo(name = "mc_count") val count: Int?,
         @ColumnInfo(name = "in_contacts") val inContacts: Boolean = true,
         @ColumnInfo(name = "mc_date") val date: Long?
-){
+) {
     val time: String
-    get() {
-        val d = Date()
-        d.time = this.date?:0
-        return "%d:%d".format(d.hours, d.minutes)
-    }
+        get() {
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = this.date ?: 0
+            return "%d:%d".format(cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE))
+        }
 
     val day: String
         get() {
-            val d = Date()
-            d.time = this.date?:0
-            return "%d/%d/%d".format(d.day, d.month, d.year)
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = this.date ?: 0
+            return "%d/%d/%d".format(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.YEAR))
         }
 }
