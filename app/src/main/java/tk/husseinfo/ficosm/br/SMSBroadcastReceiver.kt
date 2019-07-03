@@ -18,7 +18,7 @@ import tk.husseinfo.ficosm.db.DATABASE_NAME
 import tk.husseinfo.ficosm.utils.getMissedCall
 
 
-private const val MC_SMS_SENDER_TOUCH: String = "164"
+public const val MC_SMS_SENDER_TOUCH: String = "164"
 private const val NOTIFICATIONS_CHANNEL_ID: String = "MC_SMS"
 
 class SMSBroadcastReceiver : BroadcastReceiver() {

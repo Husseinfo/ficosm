@@ -7,12 +7,14 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.widget.Toast
 import butterknife.BindView
 import tk.husseinfo.ficosm.R
 import tk.husseinfo.ficosm.db.AppDatabase
 import tk.husseinfo.ficosm.db.DATABASE_NAME
 import tk.husseinfo.ficosm.utils.checkPermissions
+import tk.husseinfo.ficosm.utils.getAllMessages
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,6 +43,11 @@ class MainActivity : AppCompatActivity() {
             adapter = viewAdapter
             layoutManager = viewManager
         }
+
+        val fab: View = findViewById(R.id.fab)
+        fab.setOnClickListener {
+            syncDb()
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -60,6 +67,9 @@ class MainActivity : AppCompatActivity() {
 
     fun syncDb() {
         getDatabase(this).missedCallDao().deleteAll()
-
+        val messages = getAllMessages(this)
+        for(message in messages)
+            getDatabase(this).missedCallDao().insertOne(message)
+        recyclerView.adapter = MCListAdapter(messages)
     }
 }
