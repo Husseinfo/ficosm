@@ -12,7 +12,8 @@ data class MissedCall(
         @ColumnInfo(name = "contact_number") val contactNumber: String?,
         @ColumnInfo(name = "mc_count") val count: Int?,
         @ColumnInfo(name = "in_contacts") val inContacts: Boolean = true,
-        @ColumnInfo(name = "mc_date") val date: Long?
+        @ColumnInfo(name = "mc_date") val date: Long?,
+        @ColumnInfo(name = "sms_received") val sms_date: Long?
 ) {
     val time: String
         get() {

@@ -10,13 +10,13 @@ fun getAllMessages(context: Context): List<MissedCall> {
 
     val messages = ArrayList<MissedCall>()
 
-    val cursor = context.getContentResolver()?.query(Uri.parse("content://sms/inbox"), null, null, null, null);
+    val cursor = context.contentResolver?.query(Uri.parse("content://sms/inbox"), null, null, null, null);
 
     if (cursor!!.moveToFirst()) { // must check the result to prevent exception
         do {
-            if(!cursor.getString(2).equals(MC_SMS_SENDER_TOUCH))
+            if (cursor.getString(2) != MC_SMS_SENDER_TOUCH)
                 continue
-            messages.add(getMissedCall(context, cursor.getString(12))!!)
+            messages.add(getMissedCall(context, cursor.getString(12), cursor.getLong(4))!!)
 
         } while (cursor.moveToNext())
     } else {
@@ -24,6 +24,5 @@ fun getAllMessages(context: Context): List<MissedCall> {
     }
 
     cursor.close()
-
     return messages
 }

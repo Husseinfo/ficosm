@@ -3,8 +3,9 @@ package tk.husseinfo.ficosm.utils
 import android.content.Context
 import tk.husseinfo.ficosm.models.MissedCall
 import java.text.SimpleDateFormat
+import java.util.*
 
-fun getMissedCall(context: Context, sms: String): MissedCall? {
+fun getMissedCall(context: Context, sms: String, received_date:Long): MissedCall? {
     try {
         val number: String = Regex("\\+\\d*").find(sms)?.value ?: return null
         val count: String? = Regex("\\[\\d{1,3}]").find(sms)?.value
@@ -13,7 +14,7 @@ fun getMissedCall(context: Context, sms: String): MissedCall? {
         val date: Long? = SimpleDateFormat("dd/MM/yy hh:mm").parse("$day $time").time
         val contact = getContact(context = context, number = number)
         return MissedCall(uid = null, contactName = contact, contactNumber = number, count = Integer.parseInt(count?.substring(1, 2)
-                ?: "0"), date = date, inContacts = contact != null)
+                ?: "0"), date = date, sms_date = received_date, inContacts = contact != null)
     } catch (e: Exception) {
         return null
     }

@@ -16,6 +16,7 @@ import tk.husseinfo.ficosm.R
 import tk.husseinfo.ficosm.db.AppDatabase
 import tk.husseinfo.ficosm.db.DATABASE_NAME
 import tk.husseinfo.ficosm.utils.getMissedCall
+import java.util.*
 
 
 public const val MC_SMS_SENDER_TOUCH: String = "164"
@@ -35,7 +36,7 @@ class SMSBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         for (smsMessage in Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
             if (smsMessage.originatingAddress == MC_SMS_SENDER_TOUCH) {
-                val mc = getMissedCall(context, smsMessage.displayMessageBody) ?: return
+                val mc = getMissedCall(context, smsMessage.displayMessageBody, Calendar.getInstance().timeInMillis) ?: return
                 getDatabase(context).missedCallDao().insertOne(mc)
                 val builder = NotificationCompat.Builder(context, NOTIFICATIONS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.icons8_missed_call_24)
