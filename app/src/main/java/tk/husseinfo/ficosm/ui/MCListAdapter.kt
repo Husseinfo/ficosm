@@ -19,7 +19,6 @@ class MCListAdapter(private val calls: List<MissedCall>) :
         fun bind(item: MissedCall) = with(itemView) {
             contactName?.text = item.contactName ?: item.contactNumber
             mcDate?.text = "${item.time} - ${item.day}"
-//            setOnClickListener { listener(item) }
         }
     }
 

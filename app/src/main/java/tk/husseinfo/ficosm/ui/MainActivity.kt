@@ -3,6 +3,7 @@ package tk.husseinfo.ficosm.ui
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -15,6 +16,8 @@ import tk.husseinfo.ficosm.db.AppDatabase
 import tk.husseinfo.ficosm.db.DATABASE_NAME
 import tk.husseinfo.ficosm.utils.checkPermissions
 import tk.husseinfo.ficosm.utils.getAllMessages
+import android.app.ProgressDialog
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private val db = null
 
-    private fun getDatabase(context: Context): AppDatabase {
+    protected fun getDatabase(context: Context): AppDatabase {
         return db ?: Room.databaseBuilder(
                 context,
                 AppDatabase::class.java, DATABASE_NAME
@@ -46,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         val fab: View = findViewById(R.id.fab)
         fab.setOnClickListener {
-            syncDb()
+            Synchronizer(this).execute()
         }
     }
 
@@ -65,11 +68,32 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_PERMISSIONS = 1
     }
 
-    fun syncDb() {
-        getDatabase(this).missedCallDao().deleteAll()
-        val messages = getAllMessages(this)
-        for(message in messages)
-            getDatabase(this).missedCallDao().insertOne(message)
-        recyclerView.adapter = MCListAdapter(messages)
+    private class Synchronizer(private val activity: MainActivity) : AsyncTask<Void?, Void?, Void?>() {
+        private lateinit var progressDialog: ProgressDialog
+        override fun doInBackground(vararg params: Void?): Void? {
+            activity.getDatabase(activity).missedCallDao().deleteAll()
+            val messages = getAllMessages(activity)
+            for (message in messages)
+                activity.getDatabase(activity).missedCallDao().insertOne(message)
+            activity.runOnUiThread(Runnable {
+                activity.recyclerView.adapter = MCListAdapter(messages)
+            })
+            return null
+        }
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            progressDialog = ProgressDialog(activity)
+            progressDialog.setMessage("Loading...")
+            progressDialog.isIndeterminate = false
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+            progressDialog.setCancelable(false)
+            progressDialog.show()
+        }
+
+        override fun onPostExecute(result: Void?) {
+            super.onPostExecute(result)
+            progressDialog.dismiss()
+        }
     }
 }
