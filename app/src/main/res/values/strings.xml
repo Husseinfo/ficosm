@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ficosm</string>
+    <string name="app_name">MCsms</string>
     <string name="enable">Enable</string>
     <string name="ok">Okay</string>
     <string name="missed_call_notification_title">SMS Missed call</string>
